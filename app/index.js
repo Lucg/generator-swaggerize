@@ -9,13 +9,14 @@ var util = require('util'),
     builderUtils = require('swaggerize-builder/lib/utils'),
     wreck = require('wreck'),
     enjoi = require('enjoi'),
+	mongoose = require('mongoose'),
     update = require('./update');
 
 var ModuleGenerator = yeoman.generators.Base.extend({
     init: function () {
         this.pkg = yeoman.file.readJSON(path.join(__dirname, '../package.json'));
-
-        this.on('end', function () {
+		
+		 this.on('end', function () {
             if (!this.options['skip-install'] && this.only.length === 0) {
                 this.npmInstall();
             }
@@ -53,7 +54,6 @@ var ModuleGenerator = yeoman.generators.Base.extend({
         }
 
         console.log('Swaggerize Generator');
-
         var prompts = [
             {
                 name: 'appname',
@@ -100,7 +100,8 @@ var ModuleGenerator = yeoman.generators.Base.extend({
             this.email = props.email;
             this.framework = props.framework && props.framework.toLowerCase() || 'express';
             this.appRoot = path.basename(process.cwd()) === this.appname ? this.destinationRoot() : path.join(this.destinationRoot(), this.appname);
-
+			
+			
             if (this.framework !== 'express' && this.framework !== 'hapi') {
                 done(new Error('Unrecognized framework: ' + this.framework));
                 return;
@@ -160,8 +161,8 @@ var ModuleGenerator = yeoman.generators.Base.extend({
             this.template('server_' + this.framework + '.js', 'server.js', {
                 apiPath: path.relative(this.appRoot, path.join(this.appRoot, 'config/' + path.basename(this.apiPath)))
             });
-            this.template('_package.json', 'package.json');
             this.template('_README.md', 'README.md');
+			this.template('_package.json', 'package.json');
         }
 
         //File
@@ -267,8 +268,13 @@ var ModuleGenerator = yeoman.generators.Base.extend({
             if (!model.id) {
                 model.id = modelName;
             }
-
-            self.template('_model.js', path.join(self.appRoot, 'models/' + fileName), model);
+			
+			if (!model.x-mongoose) {
+				self.template('_model.js', path.join(self.appRoot, 'models/' + fileName), model);
+			}
+			else {
+				self.template('_model_mongoose.js', path.join(self.appRoot, 'models/' + fileName), model);
+			}
         });
     },
 
@@ -360,7 +366,6 @@ var ModuleGenerator = yeoman.generators.Base.extend({
                 operations: operations,
                 models: models
             });
-
         });
     }
 
