@@ -2,14 +2,13 @@
 
 var util = require('util'),
     path = require('path'),
-	fs = require('fs'),
+	  fs = require('fs'),
     yeoman = require('yeoman-generator'),
     jsYaml = require('js-yaml'),
     apischema = require('swaggerize-builder/lib/schema/swagger-spec/schemas/v2.0/schema.json'),
     builderUtils = require('swaggerize-builder/lib/utils'),
     wreck = require('wreck'),
     enjoi = require('enjoi'),
-	mongoose = require('mongoose'),
     update = require('./update');
 
 var ModuleGenerator = yeoman.generators.Base.extend({
@@ -269,7 +268,7 @@ var ModuleGenerator = yeoman.generators.Base.extend({
                 model.id = modelName;
             }
             console.log(model);
-      			if (model.x-mongoose) {
+      			if (model["x-mongoose"]) {
       				self.template('_model_mongoose.js', path.join(self.appRoot, 'models', fileName).replace(/\\/g,"/"), model);
       			}
             else {
