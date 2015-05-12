@@ -14,8 +14,8 @@ test('api', function (t) {
     app.use(require('body-parser')());<%}});%>
 
     app.use(swaggerize({
-        api: require('./<%=apiPath%>'),
-        handlers: path.join(__dirname, '<%=handlers%>')
+        api: require('./<%=apiPath.replace(/\\/g,"/")%>'),
+        handlers: path.join(__dirname, '<%=handlers.replace(/\\/g,"/")%>')
     }));
 
     <%_.forEach(operations, function (operation) {%>
@@ -57,7 +57,7 @@ test('api', function (t) {
         var responseSchema = enjoi({<%_.forEach(Object.keys(responseSchema), function (k, i) {%>
             '<%=k%>': <%=JSON.stringify(responseSchema[k])%><%if (i < Object.keys(responseSchema).length - 1) {%>, <%}%><%})%>
         }, {
-            '#': require('<%=apiPath%>')
+            '#': require('<%=apiPath.replace(/\\/g,"/")%>')
         });
         <%}%>
 

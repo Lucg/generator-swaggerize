@@ -19,7 +19,7 @@ Test('api', function (t) {
         server.register({
             register: Swaggerize,
             options: {
-                api: require('./<%=apiPath%>'),
+                api: require('./<%=apiPath.replace(/\\/g,"/")%>'),
                 handlers: Path.join(__dirname, '<%=handlers%>')
             }
         }, function (err) {
@@ -66,7 +66,7 @@ Test('api', function (t) {
         var responseSchema = Enjoi({<%_.forEach(Object.keys(responseSchema), function (k, i) {%>
             '<%=k%>': <%=JSON.stringify(responseSchema[k])%><%if (i < Object.keys(responseSchema).length - 1) {%>, <%}%><%})%>
         }, {
-            '#': require('<%=apiPath%>')
+            '#': require('<%=apiPath.replace(/\\/g,"/")%>')
         });
         <%}%>
         var options = {
