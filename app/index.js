@@ -263,12 +263,12 @@ var ModuleGenerator = yeoman.generators.Base.extend({
             fileName = modelName.toLowerCase() + '.js';
 
             model = self.api.definitions[modelName];
-
+            
             if (!model.id) {
                 model.id = modelName;
             }
-            console.log(model);
       			if (model["x-mongoose"]) {
+              model.definitions = self.api.definitions;
       				self.template('_model_mongoose.js', path.join(self.appRoot, 'models', fileName).replace(/\\/g,"/"), model);
       			}
             else {
