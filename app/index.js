@@ -152,6 +152,7 @@ var ModuleGenerator = yeoman.generators.Base.extend({
     app: function () {
         if (this.only.length === 0) {
             this.mkdir('config');
+            this.mkdir('lib');
 
             this.copy('jshintrc', '.jshintrc');
             this.copy('gitignore', '.gitignore');
@@ -161,7 +162,9 @@ var ModuleGenerator = yeoman.generators.Base.extend({
                 apiPath: path.relative(this.appRoot, path.join(this.appRoot, 'config', path.basename(this.apiPath))).replace(/\\/g,"/")
             });
             this.template('_README.md', 'README.md');
-			this.template('_package.json', 'package.json');
+			      this.template('_package.json', 'package.json');
+            this.template('lib_mongoose.js', 'lib/lib_mongoose.js');
+            this.template('databaseConfig.js', 'config/databaseConfig.js');
         }
 
         //File
@@ -263,7 +266,7 @@ var ModuleGenerator = yeoman.generators.Base.extend({
             fileName = modelName.toLowerCase() + '.js';
 
             model = self.api.definitions[modelName];
-            
+
             if (!model.id) {
                 model.id = modelName;
             }
