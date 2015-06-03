@@ -62,7 +62,6 @@ var isPropertyHasRef = function(property) {
 
 var getSchema = function(object, definitions) {
   var props = {};
-	console.log(definitions);
   _.forEach(object, function (property, key) {
     if (isPropertyHasRef(property)) {
       var refRegExp = /^#\/definitions\/(\w*)$/;
@@ -70,6 +69,9 @@ var getSchema = function(object, definitions) {
       var propType = refString.match(refRegExp)[1];
       props[key] = getSchema(definitions[propType]['properties'] ? definitions[propType]['properties'] : definitions[propType], definitions);
     }
+		else if (property.type=='object') {
+			props[key] =  getSchema(property.properties, definitions);
+		}
     else if (property.type) {
       var type = propertyMap(property);
       props[key] = {type: type};
