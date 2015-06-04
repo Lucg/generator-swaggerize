@@ -1,9 +1,10 @@
 {
-  "name": "werewolf-swaggerize",
+  "name": "generator-swagwolf",
   "description": "Modified Yeoman generator for swagger application with krakenjs/swaggerize tools, adding mongoose support and fixing some windows bugs",
   "version": "1.0.0",
   "author": "Luca Galli <lgalli@moonsubmarine.com>",
   "keywords": [
+    "yeoman-generator",
     "yeoman",
     "generator",
     "yo",
@@ -24,7 +25,9 @@
     "type": "git",
     "url": "git://github.com/krakenjs/generator-swaggerize.git"
   },
-  "bugs": "http://github.com/krakenjs/generator-swaggerize/issues",
+  "bugs": {
+    "url": "http://github.com/krakenjs/generator-swaggerize/issues"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
@@ -53,5 +56,10 @@
     "cover": "istanbul cover tape -- test/*.js",
     "lint": "jshint -c .jshintrc app/*.js"
   },
-  "main": "./lib/index"
+  "main": "./lib/index",
+  "homepage": "https://github.com/krakenjs/generator-swaggerize",
+  "directories": {
+    "test": "test"
+  },
+  "license": "ISC"
 }
