@@ -2,7 +2,10 @@
   "name": "generator-swagwolf",
   "description": "Modified Yeoman generator for swagger application with krakenjs/swaggerize tools, adding mongoose support and fixing some windows bugs",
   "version": "1.0.0",
-  "author": "Luca Galli <lgalli@moonsubmarine.com>",
+  "author": {
+    "name": "Luca Galli",
+    "email": "lgalli@moonsubmarine.com"
+  },
   "keywords": [
     "yeoman-generator",
     "yeoman",
@@ -41,10 +44,8 @@
     "js-yaml": "^3.2.6",
     "swaggerize-routes": "^1.0.0",
     "swaggerize-express": "^4.0.0",
-    "swaggerize-hapi": "^1.0.0-",
     "wreck": "^5.0.1",
-    "yeoman-generator": "~0.16.0",
-    "mongoose": "*"
+    "yeoman-generator": "~0.16.0"
   },
   "devDependencies": {
     "tape": "^2.4.2",
@@ -61,5 +62,10 @@
   "directories": {
     "test": "test"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "readmeFilename": "README.md",
+  "gitHead": "4e558b6b138777343f40c6c21bced444947e29af",
+  "_id": "generator-swagwolf@1.0.0",
+  "_shasum": "f5aed54925d3874494eec7b4ff488265ab186f00",
+  "_from": "generator-swagwolf@*"
 }

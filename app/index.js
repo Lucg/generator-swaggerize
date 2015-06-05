@@ -12,13 +12,13 @@ var util = require('util'),
     update = require('./update');
 
 var ModuleGenerator = yeoman.generators.Base.extend({
-    init: function () {
+    initialize: function () {
         this.pkg = yeoman.file.readJSON(path.join(__dirname, '../package.json'));
 
-		 this.on('end', function () {
-            if (!this.options['skip-install'] && this.only.length === 0) {
-                this.npmInstall();
-            }
+    		this.on('end', function () {
+                if (!this.options['skip-install'] && this.only.length === 0) {
+                    this.npmInstall();
+                }
         });
     },
 
@@ -82,9 +82,9 @@ var ModuleGenerator = yeoman.generators.Base.extend({
                 default: this.apiPath
             },
             {
-                name: 'framework',
-                message: 'Express or Hapi:',
-                default: this.framework || 'express',
+                name: 'database',
+                message: 'The database name to use with mongoose:',
+                default: this.framework || 'db',
             }
         ];
 
@@ -97,11 +97,12 @@ var ModuleGenerator = yeoman.generators.Base.extend({
             this.creatorName = props.creatorName;
             this.githubUser = props.githubUser;
             this.email = props.email;
-            this.framework = props.framework && props.framework.toLowerCase() || 'express';
+            this.framework = 'express';
+            this.database = props.database;
             this.appRoot = path.basename(process.cwd()) === this.appname ? this.destinationRoot() : path.join(this.destinationRoot(), this.appname);
 
 
-            if (this.framework !== 'express' && this.framework !== 'hapi') {
+            if (this.framework !== 'express') {
                 done(new Error('Unrecognized framework: ' + this.framework));
                 return;
             }
@@ -278,99 +279,7 @@ var ModuleGenerator = yeoman.generators.Base.extend({
               self.template('_model.js', path.join(self.appRoot, 'models', fileName).replace(/\\/g,"/"), model);
             }
         });
-    },
-
-    tests: function () {
-        var self, api, models, resourcePath, handlersPath, modelsPath, apiPath;
-
-        if (this.only.length > 0 && !~this.only.indexOf('tests')) {
-            return;
-        }
-
-        this.mkdir('tests');
-
-        self = this;
-        api = this.api;
-        models = {};
-
-        apiPath = path.relative(path.join(self.appRoot, 'tests'), path.join(self.appRoot, 'config', path.basename(this.apiPath))).replace(/\\/g,"/");
-        modelsPath = path.join(self.appRoot, 'models').replace(/\\/g,"/");
-        handlersPath = path.relative(path.join(self.appRoot, 'tests'), path.join(self.appRoot, 'handlers')).replace(/\\/g,"/");
-
-        if (api.definitions && modelsPath) {
-
-            Object.keys(api.definitions).forEach(function (key) {
-                var modelSchema, ModelCtor, options;
-
-                options = {};
-                modelSchema = api.definitions[key];
-                ModelCtor = require(path.join(self.appRoot, 'models', key.toLowerCase() + '.js').replace(/\\/g,"/"));
-
-                Object.keys(modelSchema.properties).forEach(function (prop) {
-                    var defaultValue;
-
-                    switch (modelSchema.properties[prop].type) {
-                        case 'integer':
-                        case 'number':
-                        case 'byte':
-                            defaultValue = 1;
-                            break;
-                        case 'string':
-                            defaultValue = 'helloworld';
-                            break;
-                        case 'boolean':
-                            defaultValue = true;
-                            break;
-                        default:
-                            break;
-                    }
-
-                    if (modelSchema.required && !!~modelSchema.required.indexOf(prop)) {
-                        options[prop] = defaultValue;
-                    }
-                });
-
-                models[key] = new ModelCtor(options);
-            });
-
-        }
-
-        resourcePath = api.basePath;
-
-        Object.keys(api.paths).forEach(function (opath) {
-            var fileName, operations;
-
-            operations = [];
-
-            builderUtils.verbs.forEach(function (verb) {
-                var operation = {};
-
-                if (!api.paths[opath][verb]) {
-                    return;
-                }
-
-                Object.keys(api.paths[opath][verb]).forEach(function (key) {
-                    operation[key] = api.paths[opath][verb][key];
-                });
-
-                operation.path = opath.replace(/\\/g,"/");
-                operation.method = verb;
-
-                operations.push(operation);
-            });
-
-            fileName = path.join(self.appRoot, 'tests/test' , opath.replace(/\//g, '_') + '.js').replace(/\\/g,"/");
-
-            self.template('_test_' + self.framework + '.js', fileName, {
-                apiPath: apiPath,
-                handlers: handlersPath,
-                resourcePath: resourcePath,
-                operations: operations,
-                models: models
-            });
-        });
     }
-
 });
 
 function loadApi(apiPath, content) {
